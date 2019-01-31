@@ -3,6 +3,9 @@ A Github Action to deploy AWS Lambda functions written in Python with their depe
 
 ## Use
 Doesn't take any arguments. Deploys everything in the repo as code to the Lambda function, and installs/zips/deploys the dependencies as a separate layer the function can then immediately use.
+### Structure
+- Lambda code should be structured normally/as Lambda would expect it.
+- **Dependencies must be stored in a `requirements.txt`**.
 ### Environment variables
 Stored as secrets or env vars, doesn't matter. But also please don't put your AWS keys outside Secrets.
 - **AWS Credentials**  
