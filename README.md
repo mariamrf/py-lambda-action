@@ -9,7 +9,7 @@ Doesn't take any arguments. Deploys everything in the repo as code to the Lambda
 ### Environment variables
 Stored as secrets or env vars, doesn't matter. But also please don't put your AWS keys outside Secrets.
 - **AWS Credentials**  
-    That includes the `AWS_ACCESS_KEY_ID`, `SECRET_ACCESS_KEY`, etc. It's used by `awscli`, so the docs for that [can be found here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
+    That includes the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, etc. It's used by `awscli`, so the docs for that [can be found here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
 - `LAMBDA_LAYER_ARN`  
     The ARN for the Lambda layer the dependencies should be pushed to **without the version** (every push is a new version).
 - `LAMBDA_FUNCITON_NAME`  
