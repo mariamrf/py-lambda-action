@@ -1,5 +1,5 @@
 # py-lambda-action
-A Github Action to deploy AWS Lambda functions written in Python with their dependencies in a separate layer. For now, only works/guaranteed to work with Python 3.6.
+A Github Action to deploy AWS Lambda functions written in Python with their dependencies in a separate layer. For now, only works with Python 3.6.
 
 ## Use
 Doesn't take any arguments. Deploys everything in the repo as code to the Lambda function, and installs/zips/deploys the dependencies as a separate layer the function can then immediately use.
