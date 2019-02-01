@@ -1,7 +1,7 @@
 FROM python:3.6
 
 LABEL "com.github.actions.name"="Py Lambda Deploy"
-LABEL "com.github.actions.description"="Deploy python code to Lambda with dependencies in a separate layer."
+LABEL "com.github.actions.description"="Deploy python code to AWS Lambda with dependencies in a separate layer."
 LABEL "com.github.actions.icon"="layers"
 LABEL "com.github.actions.color"="yellow"
 
