@@ -1,15 +1,5 @@
 #!/bin/bash
 
-check_if_branch(){
-	local ref=$(jq '.ref' $GITHUB_EVENT_PATH)
-	if ! [[ -z ${BRANCH} ]]; then
-		if [ "$ref" != "\"refs/heads/$BRANCH\"" ]; then
-			echo "Not deploying because we're not on $BRANCH"
-			exit 0
-		fi
-	fi
-}
-
 install_zip_dependencies(){
 	echo "Installing and zipping dependencies..."
 	mkdir python
@@ -43,6 +33,5 @@ deploy_lambda_function(){
 	update_function_layers
 }
 
-check_if_branch
 deploy_lambda_function
 echo "Done."

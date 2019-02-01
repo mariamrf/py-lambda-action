@@ -20,8 +20,7 @@ Stored as secrets or env vars, doesn't matter. But also please don't put your AW
     - Function name - `my-function`  
     - Function ARN - `arn:aws:lambda:us-west-2:123456789012:function:my-function`  
     - Partial ARN - `123456789012:function:my-function`
-- `BRANCH` (optional)  
-    If the action should only be executed on a certain branch (e.g. `master`).
+
 
 ### Example workflow
 ```hcl
@@ -31,6 +30,7 @@ workflow "Build & deploy" {
 }
 
 action "py-lambda-deploy" {
+  needs = "Master"
   uses = "mariamrf/py-lambda-action@master"
   secrets = [
     "AWS_ACCESS_KEY_ID",
@@ -39,8 +39,12 @@ action "py-lambda-deploy" {
     "LAMBDA_FUNCTION_NAME",
     "LAMBDA_LAYER_ARN",
   ]
-  env = {
-    BRANCH = "master"
-  }
 }
+
+# Filter for master branch
+action "Master" {
+  uses = "actions/bin/filter@master"
+  args = "branch master"
+}
+
 ```
