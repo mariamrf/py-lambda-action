@@ -27,6 +27,14 @@ update_function_layers(){
 }
 
 deploy_lambda_function(){
+	if [ ! -z $INPUT_LAMBDA_FUNCTION_NAME ]
+	then
+      		export LAMBDA_FUNCTION_NAME=$INPUT_LAMBDA_FUNCTION_NAME
+	fi
+	if [ ! -z $INPUT_LAMBDA_LAYER_ARN ]
+	then
+      		export LAMBDA_LAYER_ARN=$INPUT_LAMBDA_LAYER_ARN
+	fi
 	install_zip_dependencies
 	publish_dependencies_as_layer
 	publish_function_code
