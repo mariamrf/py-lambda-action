@@ -15,7 +15,7 @@ Stored as secrets or env vars, doesn't matter. But also please don't put your AW
     That includes the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, etc. It's used by `awscli`, so the docs for that [can be found here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
 - `LAMBDA_LAYER_ARN`  
     The ARN for the Lambda layer the dependencies should be pushed to **without the version** (every push is a new version).
-- `LAMBDA_FUNCITON_NAME`  
+- `LAMBDA_FUNCTION_NAME`  
     The Lambda function name. [From the AWS docs](https://docs.aws.amazon.com/cli/latest/reference/lambda/update-function-code.html), it can be any of the following:
     - Function name - `my-function`  
     - Function ARN - `arn:aws:lambda:us-west-2:123456789012:function:my-function`  
