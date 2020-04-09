@@ -9,8 +9,8 @@ Doesn't take any arguments. Deploys everything in the repo as code to the Lambda
 ### Structure
 - Lambda code should be structured normally/as Lambda would expect it.
 - **Dependencies must be stored in a `requirements.txt`**.
-### Environment variables
-Stored as secrets or env vars, doesn't matter. But also please don't put your AWS keys outside Secrets.
+### Required Parameters
+Passed to the action through a `with` block, can be pulled from secrets. But also please don't put your AWS keys outside Secrets.
 - **AWS Credentials**  
     That includes the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, etc. It's used by `awscli`, so the docs for that [can be found here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
 - `LAMBDA_LAYER_ARN`  
@@ -20,31 +20,27 @@ Stored as secrets or env vars, doesn't matter. But also please don't put your AW
     - Function name - `my-function`  
     - Function ARN - `arn:aws:lambda:us-west-2:123456789012:function:my-function`  
     - Partial ARN - `123456789012:function:my-function`
-
+- `LAYER_VERSION`  
+    The Lambda layer version. [AWS docs can be found here](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html).
 
 ### Example workflow
-```hcl
-workflow "Build & deploy" {
-  on = "push"
-  resolves = ["py-lambda-deploy"]
-}
-
-action "py-lambda-deploy" {
-  needs = "Master"
-  uses = "mariamrf/py-lambda-action@master"
-  secrets = [
-    "AWS_ACCESS_KEY_ID",
-    "AWS_SECRET_ACCESS_KEY",
-    "AWS_DEFAULT_REGION",
-    "LAMBDA_FUNCTION_NAME",
-    "LAMBDA_LAYER_ARN",
-  ]
-}
-
-# Filter for master branch
-action "Master" {
-  uses = "actions/bin/filter@master"
-  args = "branch master"
-}
-
+```
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.DEFAULT_AWS_REGION }}
+      - name: Py Lambda Deploy
+        uses: mariamrf/py-lambda-action@master
+        with:
+          lambda_layer_arn: ${{ secrets.LAMBDA_LAYER_ARN }}
+          lambda_function_name: ${{ secrets.LAMBDA_FUNCTION_NAME }}
+          layer_version: ${{ secrets.LAYER_VERSION }}
 ```
