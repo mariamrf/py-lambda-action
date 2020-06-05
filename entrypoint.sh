@@ -1,23 +1,20 @@
 #!/bin/bash
 
 install_zip_dependencies(){
-	echo "Installing and zipping dependencies..."
-	mkdir python
-	pip install --target=python -r "${INPUT_REQUIREMENTS_TXT}"
-	zip -r dependencies.zip ./python
+	echo "Zipping dependencies..."
+	zip -r dependencies.zip ${INPUT_DEPENDENCY_DIRECTORY}
 }
 
 publish_dependencies_as_layer(){
 	echo "Publishing dependencies as a layer..."
 	local result=$(aws lambda publish-layer-version --layer-name "${INPUT_LAMBDA_LAYER_ARN}" --zip-file fileb://dependencies.zip)
 	LAYER_VERSION=$(jq '.Version' <<< "$result")
-	rm -rf python
 	rm dependencies.zip
 }
 
 publish_function_code(){
 	echo "Deploying the code itself..."
-	zip -r code.zip . -x \*.git\*
+  zip -r code.zip . -i src/lambdas/ -x \*.git\*
 	aws lambda update-function-code --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --zip-file fileb://code.zip
 }
 
