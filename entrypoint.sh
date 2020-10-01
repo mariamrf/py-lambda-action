@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 install_zip_dependencies(){
 	echo "Installing and zipping dependencies..."
