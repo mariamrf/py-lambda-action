@@ -29,6 +29,10 @@ Stored as secrets or env vars, doesn't matter. But also please don't put your AW
     - Partial ARN - `123456789012:function:my-function`
 - `requirements_txt`
     The name/path for the `requirements.txt` file. Defaults to `requirements.txt`.
+- `use_s3`
+    Whether to upload the dependency layer zip to S3 (required if the zip exceeds 50MB) or not. (If not, it's uploaded directly to Lambda.) Defaults to `false`.
+- `s3_bucket_name`
+    The S3 bucket name used if you are uploading the dependency layer to S3.
 
 
 ### Example workflow
