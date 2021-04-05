@@ -12,6 +12,10 @@ inputs:
   lambda_function_name:
     description: The Lambda function name. Check the AWS docs/readme for examples.
     required: true
+  exclude_files:
+    description: A string of files or folders to exclude, delimited by whitespace.
+    required: false
+    default: ''
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -19,6 +23,7 @@ runs:
     - ${{ inputs.requirements_txt }}
     - ${{ inputs.lambda_layer_arn }}
     - ${{ inputs.lambda_function_name }}
+    - ${{ inputs.exclude_files }}
 branding:
   icon: 'layers'
   color: 'yellow'
