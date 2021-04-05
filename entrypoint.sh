@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 install_zip_dependencies(){
 	echo "Installing and zipping dependencies..."
@@ -16,10 +16,21 @@ publish_dependencies_as_layer(){
 	rm dependencies.zip
 }
 
+files_to_exclude() {
+    echo "exclude.lst" > exclude.lst
+    echo ".git/*" >> exclude.lst
+    read -ra ADDR <<< "$INPUT_EXCLUDE_FILES"
+    for i in "${ADDR[@]}"; do
+        echo "$i*" >> exclude.lst
+    done
+}
+
 publish_function_code(){
 	echo "Deploying the code itself..."
-	zip -r code.zip . -x \*.git\*
+    files_to_exclude
+	zip -r code.zip . -x@exclude.lst
 	aws lambda update-function-code --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --zip-file fileb://code.zip
+    rm exclude.lst
 }
 
 update_function_layers(){
