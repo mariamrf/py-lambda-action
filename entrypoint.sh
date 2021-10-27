@@ -3,6 +3,8 @@ set -e
 
 cd "${INPUT_CODE_PATH}"
 
+env
+
 install_zip_dependencies(){
 	echo "Installing and zipping dependencies..."
 	mkdir python
@@ -30,10 +32,9 @@ update_function_layers(){
 }
 
 deploy_lambda_function(){
-	install_zip_dependencies
-	publish_dependencies_as_layer
-	publish_function_code
-	update_function_layers
+	[ -z "$INPUT_LAMBDA_LAYER_ARN" ] && install_zip_dependencies && publish_dependencies_as_layer
+	[ -z "$INPUT_LAMBDA_FUNCTION_NAME" ] && publish_function_code
+	[ -z "$INPUT_LAMBDA_LAYER_ARN" ] && [ -z "$INPUT_LAMBDA_FUNCTION_NAME" ] && update_function_layers
 }
 
 deploy_lambda_function
