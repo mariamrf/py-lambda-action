@@ -1,10 +1,7 @@
 #!/bin/bash
 set -e
-set -x
 
 cd "${INPUT_CODE_PATH}"
-
-env
 
 install_zip_dependencies(){
 	echo "Installing and zipping dependencies..."
