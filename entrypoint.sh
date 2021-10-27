@@ -36,6 +36,7 @@ deploy_lambda_function(){
 	[ -n "$INPUT_LAMBDA_LAYER_ARN" ] && install_zip_dependencies && publish_dependencies_as_layer
 	[ -n "$INPUT_LAMBDA_FUNCTION_NAME" ] && publish_function_code
 	[ -n "$INPUT_LAMBDA_LAYER_ARN" ] && [ -n "$INPUT_LAMBDA_FUNCTION_NAME" ] && update_function_layers
+  true
 }
 
 deploy_lambda_function
