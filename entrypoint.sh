@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+cd "${INPUT_CODE_PATH}"
+
 install_zip_dependencies(){
 	echo "Installing and zipping dependencies..."
 	mkdir python

@@ -12,6 +12,10 @@ inputs:
   lambda_function_name:
     description: The Lambda function name. Check the AWS docs/readme for examples.
     required: true
+  code_path:
+    description: Path to the code.
+    required: false
+    default: './'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -19,6 +23,7 @@ runs:
     - ${{ inputs.requirements_txt }}
     - ${{ inputs.lambda_layer_arn }}
     - ${{ inputs.lambda_function_name }}
+    - ${{ inputs.code_path }}
 branding:
   icon: 'layers'
   color: 'yellow'
