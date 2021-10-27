@@ -33,9 +33,9 @@ update_function_layers(){
 }
 
 deploy_lambda_function(){
-	[ -z "$INPUT_LAMBDA_LAYER_ARN" ] && install_zip_dependencies && publish_dependencies_as_layer
-	[ -z "$INPUT_LAMBDA_FUNCTION_NAME" ] && publish_function_code
-	[ -z "$INPUT_LAMBDA_LAYER_ARN" ] && [ -z "$INPUT_LAMBDA_FUNCTION_NAME" ] && update_function_layers
+	[ -n "$INPUT_LAMBDA_LAYER_ARN" ] && install_zip_dependencies && publish_dependencies_as_layer
+	[ -n "$INPUT_LAMBDA_FUNCTION_NAME" ] && publish_function_code
+	[ -n "$INPUT_LAMBDA_LAYER_ARN" ] && [ -n "$INPUT_LAMBDA_FUNCTION_NAME" ] && update_function_layers
 }
 
 deploy_lambda_function
