@@ -12,6 +12,9 @@ inputs:
   lambda_function_name:
     description: The Lambda function name. Check the AWS docs/readme for examples.
     required: true
+  s3_bucket:
+    description: S3 bucket where upload lambda zip code.
+    required: true
   code_path:
     description: Path to the code.
     required: false
@@ -24,6 +27,7 @@ runs:
     - ${{ inputs.lambda_layer_arn }}
     - ${{ inputs.lambda_function_name }}
     - ${{ inputs.code_path }}
+    - ${{ inputs.s3_bucket }}
 branding:
   icon: 'layers'
   color: 'yellow'
