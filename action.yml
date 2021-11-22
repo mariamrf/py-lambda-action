@@ -19,6 +19,13 @@ inputs:
     description: Path to the code.
     required: false
     default: './'
+  architectures:
+    description: Target architectures
+    required: false
+    default: 'x86_64'
+  runtimes:
+    description: Compatible runtimes in space-separated string
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -28,6 +35,8 @@ runs:
     - ${{ inputs.lambda_function_name }}
     - ${{ inputs.code_path }}
     - ${{ inputs.s3_bucket }}
+    - ${{ inputs.architectures }}
+    - ${{ inputs.runtimes }}
 branding:
   icon: 'layers'
   color: 'yellow'

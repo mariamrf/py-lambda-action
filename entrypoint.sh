@@ -12,7 +12,7 @@ install_zip_dependencies(){
 
 publish_dependencies_as_layer(){
 	echo "Publishing dependencies as a layer..."
-	local result=$(aws lambda publish-layer-version --layer-name "${INPUT_LAMBDA_LAYER_ARN}" --zip-file fileb://dependencies.zip)
+	local result=$(aws lambda publish-layer-version --layer-name "${INPUT_LAMBDA_LAYER_ARN}" --compatible-runtimes ${INPUT_RUNTIMES} --compatible-architectures ${INPUT_ARCHITECTURES} --zip-file fileb://dependencies.zip)
 	LAYER_VERSION=$(jq '.Version' <<< "$result")
 	rm -rf python
 	rm dependencies.zip
@@ -22,12 +22,12 @@ publish_function_code(){
 	echo "Deploying the code itself..."
 	zip -r code.zip . -x \*.git\*
   aws s3 cp code.zip s3://${INPUT_S3_BUCKET}/${INPUT_LAMBDA_FUNCTION_NAME}.zip
-	aws lambda update-function-code --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --zip-file fileb://code.zip
+	aws lambda update-function-code --architectures ${INPUT_ARCHITECTURES} --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --zip-file fileb://code.zip
 }
 
 update_function_layers(){
 	echo "Using the layer in the function..."
-	aws lambda update-function-configuration --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --layers "${INPUT_LAMBDA_LAYER_ARN}:${LAYER_VERSION}"
+	aws lambda update-function-configuration --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --runtime "${INPUT_RUNTIMES%% *}" --layers "${INPUT_LAMBDA_LAYER_ARN}:${LAYER_VERSION}"
 }
 
 deploy_lambda_function(){
