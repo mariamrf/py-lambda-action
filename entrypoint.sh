@@ -43,8 +43,9 @@ make_archive()
     log "Installing codes..."
     if [ -n "$INPUT_PATH" ]; then
 	for path in $INPUT_PATH; do
+	    [ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
 	    pushd $path
-	    zip -r $archive . -x $INPUT_PATTERNS #\*.git\* \*/__pycache__\*
+	    zip -r $archive . $opts
 	    popd
 	done
     fi
@@ -56,7 +57,8 @@ make_archive()
 	    pip install -t "$tempdir" -r "$path"
 	done
 	pushd "$tempdir"
-	zip -r $archive . -x $INPUT_PATTERNS
+	[ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
+	zip -r $archive . $opts
 	popd
 	rm -f -- "$tempdir"
 	trap "rm -f -- '$archive'" EXIT
