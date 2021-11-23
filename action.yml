@@ -29,6 +29,9 @@ inputs:
   excludes:
     description: zip -x patterns to exclude files from the archive
     required: false
+  layers:
+    description: Lambda Layers to add to Lambda Function
+    required: false
   lambda_layer_arn:
     description: |
       The ARN for the Lambda layer the dependencies should be pushed to
