@@ -47,7 +47,7 @@ make_archive()
     if [ -z "$INPUT_EXCLUDES" ]; then
 	zip_opts=
     else
-	zip_opts="-x ${INPUT_EXCLUDES/\*/\\*}"
+	zip_opts="-x $(for w in $INPUT_EXCLUDES; do echo ${w/\*/\\\\*}; done |xargs)"
     fi
     debug "INPUT_EXCLUDES: $INPUT_EXCLUDES"
     debug "zip_opts: $zip_opts"
