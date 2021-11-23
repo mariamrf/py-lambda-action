@@ -108,6 +108,7 @@ deploy_lambda_layer()
 		       --zip-file "fileb://$archive"			 \
 	  )"
     arn="$(jq .LayerVersionArn <<< "$result")"
+    [ $? != 0 ] || [ "$arn" == "null" ] && return 1
     echo -n $arn
 }
 
