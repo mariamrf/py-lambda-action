@@ -26,8 +26,8 @@ get_last_layer_version_arn()
     layer_name="$1"
     # TODO: could try all combinations of arch and runtimes
     result=$(aws lambda list-layer-versions --layer-name "$layer_name"	\
-		 --compatible-architecture "${INPUT_ARCHITECTURES% *}"	\
-		 --compatible-runtime "${INPUT_RUNTIME% *}"		\
+		 --compatible-architecture "${INPUT_ARCHITECTURES%% *}"	\
+		 --compatible-runtime "${INPUT_RUNTIMES%% *}"		\
 		 --max-items 1)
     jq .LayerVersions[0].LayerVersionArn <<< "$result"
 }
