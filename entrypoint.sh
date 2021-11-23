@@ -101,12 +101,12 @@ deploy_lambda_layer()
     log "Deploying lambda layer: ${INPUT_NAME}..."
     local s3_url="s3://${INPUT_S3_BUCKET}/${INPUT_NAME}.zip"
     aws s3 cp "$archive" "$s3_url"
-    local result="$(aws lambda publish-layer-version			 \
-                       --layer-name "$INPUT_LAMBDA_LAYER_ARN"		 \
-		       --compatible-architectures "$INPUT_ARCHITECTURES" \
-		       --compatible-runtimes "$INPUT_RUNTIMES"		 \
-		       --zip-file "fileb://$archive"			 \
-	  )"
+    local result="$(aws lambda publish-layer-version			\
+                       --layer-name "$INPUT_LAMBDA_LAYER_ARN"		\
+                       --compatible-architectures $INPUT_ARCHITECTURES	\
+                       --compatible-runtimes $INPUT_RUNTIMES		\
+                       --zip-file "fileb://$archive"			\
+          )"
     arn="$(jq .LayerVersionArn <<< "$result")"
     [ $? != 0 ] || [ "$arn" == "null" ] && return 1
     echo -n $arn
