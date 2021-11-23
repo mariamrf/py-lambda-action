@@ -52,7 +52,7 @@ make_archive()
     log "Installing dependencies..."
     if [ -n "$INPUT_PIP" ]; then
 	tempdir=$(mktemp -d pip.XXXXXXXXXX)
-	trap "rm -f -- '$archive' '$tempdir'" EXIT
+	trap "rm -rf -- '$archive' '$tempdir'" EXIT
 	for path in $INPUT_PIP; do
 	    pip install -t "$tempdir" -r "$path"
 	done
@@ -60,7 +60,7 @@ make_archive()
 	[ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
 	zip -r $archive . $opts
 	popd
-	rm -f -- "$tempdir"
+	rm -rf -- "$tempdir"
 	trap "rm -f -- '$archive'" EXIT
     fi
     echo -n "$archive"
