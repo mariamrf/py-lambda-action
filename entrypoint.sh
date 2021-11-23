@@ -29,7 +29,8 @@ get_last_layer_version_arn()
 		 --compatible-architecture "${INPUT_ARCHITECTURES%% *}"	\
 		 --compatible-runtime "${INPUT_RUNTIMES%% *}"		\
 		 --max-items 1)
-    jq .LayerVersions[0].LayerVersionArn <<< "$result"
+    arn="$(jq -e .LayerVersions[0].LayerVersionArn <<< "$result")"
+    [ $? == 0 ] && echo -n $arn || return -1
 }
 
 
@@ -68,9 +69,8 @@ list_layer_version_arns()
 {
     arns=
     for layer_name in $@; do
-	layer_json="$(get_last_layer_version_arn "$layer_name")"
-	arn="$(jq .LayerVersions[0].LayerVersionArn <<< $layer_json)"
-	arns="$arns $arn"
+	layer_arn="$(get_last_layer_version_arn "$layer_name")"
+	arns="$arns $layer_arn"
     done
     echo -n $arns
 }
@@ -84,7 +84,7 @@ deploy_lambda_function()
         --architectures "$INPUT_ARCHITECTURES"	\
 	--function-name "$INPUT_NAME"		\
 	--zip-file "fileb://$archive"
-    opts=""
+    opts=
     if [ -n "$INPUT_LAYERS" ]; then
 	layers=$(list_layer_version_arns "$INPUT_LAYERS")
 	opts="--layers $layers"
