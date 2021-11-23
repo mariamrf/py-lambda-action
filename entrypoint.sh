@@ -102,7 +102,7 @@ deploy_lambda_layer()
     local s3_url="s3://${INPUT_S3_BUCKET}/${INPUT_NAME}.zip"
     aws s3 cp "$archive" "$s3_url"
     local result="$(aws lambda publish-layer-version			 \
-                       --layer-name "$INPUT_LAYER_LAMBDA_ARN"		 \
+                       --layer-name "$INPUT_LAMBDA_LAYER_ARN"		 \
 		       --compatible-architectures "$INPUT_ARCHITECTURES" \
 		       --compatible-runtimes "$INPUT_RUNTIMES"		 \
 		       --zip-file "fileb://$archive"			 \
