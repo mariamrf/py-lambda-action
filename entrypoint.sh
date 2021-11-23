@@ -44,7 +44,11 @@ make_archive()
     log "Building $INPUT_NAME $INPUT_TARGET archive..."
     archive="$(realpath .)/archive.zip"
     trap "rm -f -- '$archive'" EXIT
-    [ -n "$INPUT_EXCLUDES" ] && zip_opts="-x $INPUT_EXCLUDES" || zip_opts=
+    if [ -z "$INPUT_EXCLUDES" ]; then
+	zip_opts=
+    else
+	zip_opts="-x ${INPUT_EXCLUDES/\*/\\*}"
+    fi
     debug "INPUT_EXCLUDES: $INPUT_EXCLUDES"
     debug "zip_opts: $zip_opts"
     log "Installing codes..."
