@@ -5,20 +5,24 @@ set -e
 
 
 name="$(basename $0)"
-
+DEBUG=1
 
 die()
 {
-    echo ERROR: $@ >&2
+    echo ERROR: $name: $@ >&2
     exit -1
 }
 
 log()
 {
-    echo $name: $@
+    echo INFO: $name: $@
 }
 
-
+debug()
+{
+    grep -q yes\\\|1\\\|on\\\|true <<< $DEBUG || return 0
+    echo DEBUG: $name: $@
+}
 
 
 get_last_layer_version_arn()
@@ -40,12 +44,14 @@ make_archive()
     log "Building $INPUT_NAME $INPUT_TARGET archive..."
     archive="$(realpath .)/archive.zip"
     trap "rm -f -- '$archive'" EXIT
+    [ -n "$INPUT_EXCLUDES" ] && zip_opts="-x $INPUT_EXCLUDES" || zip_opts=
+    debug "INPUT_EXCLUDES: $INPUT_EXCLUDES"
+    debug "zip_opts: $zip_opts"
     log "Installing codes..."
     if [ -n "$INPUT_PATH" ]; then
-	[ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
 	for path in $INPUT_PATH; do
 	    pushd $path
-	    zip -r $archive . $opts
+	    zip -r $archive . $zip_opts
 	    popd
 	done
     fi
@@ -57,8 +63,7 @@ make_archive()
 	    pip install -t "$tempdir" -r "$path"
 	done
 	pushd "$tempdir"
-	[ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
-	zip -r $archive . $opts
+	zip -r $archive . $zip_opts
 	popd
 	rm -rf -- "$tempdir"
 	trap "rm -f -- '$archive'" EXIT
