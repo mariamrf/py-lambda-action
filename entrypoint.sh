@@ -114,7 +114,7 @@ deploy_lambda_layer()
 
 
 TAG="${INPUT_NAME#*#}"
-INPUT_NAME="${INPUT_NAME#*}"
+INPUT_NAME="${INPUT_NAME%#*}"
 
 
 case "$INPUT_TARGET" in
