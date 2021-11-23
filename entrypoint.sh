@@ -29,8 +29,9 @@ get_last_layer_version_arn()
 		 --compatible-architecture "${INPUT_ARCHITECTURES%% *}"	\
 		 --compatible-runtime "${INPUT_RUNTIMES%% *}"		\
 		 --max-items 1)
-    arn="$(jq -e .LayerVersions[0].LayerVersionArn <<< "$result")"
-    [ $? == 0 ] && echo -n $arn || return -1
+    arn="$(jq -e .LayerVersions[0].LayerVersionArn <<< "$result"|cut -d\" -f2)"
+    [ $? != 0 ] || [ "$arn" == "null" ] && return 1
+    echo -n $arn
 }
 
 
