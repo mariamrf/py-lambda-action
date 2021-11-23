@@ -42,8 +42,8 @@ make_archive()
     trap "rm -f -- '$archive'" EXIT
     log "Installing codes..."
     if [ -n "$INPUT_PATH" ]; then
+	[ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
 	for path in $INPUT_PATH; do
-	    [ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
 	    pushd $path
 	    zip -r $archive . $opts
 	    popd
