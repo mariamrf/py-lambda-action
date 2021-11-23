@@ -1,42 +1,62 @@
 name: Py Lambda Deploy
 author: Mariam Maarouf
-description: Deploy python code to AWS Lambda with dependencies in a separate layer.
+description: |
+  Deploy python code to AWS Lambda with dependencies in a separate layer.
 inputs:
-  requirements_txt:
-    description: the name/path to the requirements.txt file
+  target:
+    description: lambda or layer
     required: true
-    default: 'requirements.txt'
-  lambda_layer_arn:
-    description: The ARN for the Lambda layer the dependencies should be pushed to without the version (every push is a new version).
+  name:
+    description: target name
     required: true
-  lambda_function_name:
-    description: The Lambda function name. Check the AWS docs/readme for examples.
-    required: true
-  s3_bucket:
-    description: S3 bucket where upload lambda zip code.
-    required: true
-  code_path:
-    description: Path to the code.
-    required: false
-    default: './'
   architectures:
     description: Target architectures
     required: false
     default: 'x86_64'
   runtimes:
     description: Compatible runtimes in space-separated string
+    required: false
+    default: 'python3.9 python3.8 python3.7 python3.6'
+  path:
+    description: Path to the code.
+    required: false
+  pip:
+    description: The name/path to the requirements.pip file
+    required: false
+  patterns:
+    description: Regex patterns to gather files for the archive (not used yet)
+    required: false
+  excludes:
+    description: zip -x patterns to exclude files from the archive
+    required: false
+  lambda_layer_arn:
+    description: |
+      The ARN for the Lambda layer the dependencies should be pushed to
+      without the version (every push is a new version).
+    required: false
+  lambda_function_name:
+    description: |
+      The Lambda function name. Check the AWS docs/readme for examples.
+    required: false
+  s3_bucket:
+    description: S3 bucket where upload lambda zip code.
     required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.requirements_txt }}
-    - ${{ inputs.lambda_layer_arn }}
-    - ${{ inputs.lambda_function_name }}
-    - ${{ inputs.code_path }}
-    - ${{ inputs.s3_bucket }}
+    - ${{ inputs.target }}
+    - ${{ inputs.name }}
     - ${{ inputs.architectures }}
     - ${{ inputs.runtimes }}
+    - ${{ inputs.path }}
+    - ${{ inputs.pip }}
+    - ${{ inputs.patterns }}
+    - ${{ inputs.excludes }}
+    - ${{ inputs.layers }}
+    - ${{ inputs.lambda_layer_arn }}
+    - ${{ inputs.lambda_function_name }}
+    - ${{ inputs.s3_bucket }}
 branding:
   icon: 'layers'
   color: 'yellow'
