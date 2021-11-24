@@ -43,40 +43,45 @@ make_archive()
 {
     log "Building $INPUT_NAME $INPUT_TARGET archive..."
     archive="$(realpath .)/archive.zip"
-    trap "rm -f -- '$archive'" EXIT
     set -f
-    if [ -z "$INPUT_EXCLUDES" ]; then
+    trap "rm -f -- '$archive'" EXIT
+        if [ -z "$INPUT_EXCLUDES" ]; then
 	zip_opts=
     else
 	zip_opts="-x $INPUT_EXCLUDES"
     fi
     debug "INPUT_EXCLUDES: $INPUT_EXCLUDES"
     debug "zip_opts: $zip_opts"
-    log "Installing codes..."
+    set +f
+    tempdir=$(mktemp -d pip.XXXXXXXXXX)
+    trap "rm -rf -- '$archive' '$tempdir'" EXIT
+    mkdir "$tempdir/python"
     if [ -n "$INPUT_PATH" ]; then
+	log "Installing codes... : $INPUT_PATH"
 	for path in $INPUT_PATH; do
-	    pushd $path
-	    debug "Running: zip -r $archive . $zip_opts"
-	    zip -r $archive . $zip_opts
-	    popd
+	    ln -s "$path/*" "$tempdir/python/"
 	done
     fi
-    log "Installing dependencies..."
     if [ -n "$INPUT_PIP" ]; then
-	tempdir=$(mktemp -d pip.XXXXXXXXXX)
-	trap "rm -rf -- '$archive' '$tempdir'" EXIT
+	log "Installing dependencies... : $INPUT_PIP"
 	for path in $INPUT_PIP; do
-	    pip install -t "$tempdir" -r "$path"
+	    pip install -t "$tempdir/python/" -r "$path"
 	done
+    fi
+    log "Zipping archive..."
+    set -f
+    if [ "$INPUT_TARGET" == "layer" ]; then
 	pushd "$tempdir"
-	debug "Running: zip -r $archive . $zip_opts"
-	zip -r $archive . $zip_opts
+	zip -r $archive python $zip_args
 	popd
-	rm -rf -- "$tempdir"
-	trap "rm -f -- '$archive'" EXIT
+    else
+	pushd "$tempdir/python"
+	zip -r $archive . $zip_args
+	popd
     fi
     set +f
-    echo -n "$archive"
+    rm -rf -- "$tempdir"
+    trap "rm -f -- '$archive'" EXIT
 }
 
 list_layer_version_arns()
