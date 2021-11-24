@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
-set -x
+
 
 
 
 name="$(basename $0)"
 DEBUG=1
+
 
 die()
 {
