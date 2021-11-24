@@ -72,11 +72,11 @@ make_archive()
     set -f
     if [ "$INPUT_TARGET" == "layer" ]; then
 	pushd "$tempdir"
-	zip -r $archive python $zip_args
+	zip -r $archive python $zip_opts
 	popd
     else
 	pushd "$tempdir/python"
-	zip -r $archive . $zip_args
+	zip -r $archive . $zip_opts
 	popd
     fi
     set +f
