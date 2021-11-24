@@ -5,20 +5,25 @@ set -e
 
 
 name="$(basename $0)"
+DEBUG=1
 
 
 die()
 {
-    echo ERROR: $@ >&2
+    echo ERROR: $name: $@ >&2
     exit -1
 }
 
 log()
 {
-    echo $name: $@
+    echo INFO: $name: $@
 }
 
-
+debug()
+{
+    grep -q yes\\\|1\\\|on\\\|true <<< $DEBUG || return 0
+    echo DEBUG: $name: $@
+}
 
 
 get_last_layer_version_arn()
@@ -39,31 +44,45 @@ make_archive()
 {
     log "Building $INPUT_NAME $INPUT_TARGET archive..."
     archive="$(realpath .)/archive.zip"
+    set -f
     trap "rm -f -- '$archive'" EXIT
-    log "Installing codes..."
+        if [ -z "$INPUT_EXCLUDES" ]; then
+	zip_opts=
+    else
+	zip_opts="-x $INPUT_EXCLUDES"
+    fi
+    debug "INPUT_EXCLUDES: $INPUT_EXCLUDES"
+    debug "zip_opts: $zip_opts"
+    set +f
+    tempdir=$(mktemp -d pip.XXXXXXXXXX)
+    trap "rm -rf -- '$archive' '$tempdir'" EXIT
+    mkdir "$tempdir/python"
     if [ -n "$INPUT_PATH" ]; then
+	log "Installing codes... : $INPUT_PATH"
 	for path in $INPUT_PATH; do
-	    [ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
-	    pushd $path
-	    zip -r $archive . $opts
-	    popd
+	    ln -vs "$(realpath $path)/"* "$tempdir/python/"
 	done
     fi
-    log "Installing dependencies..."
     if [ -n "$INPUT_PIP" ]; then
-	tempdir=$(mktemp -d pip.XXXXXXXXXX)
-	trap "rm -rf -- '$archive' '$tempdir'" EXIT
+	log "Installing dependencies... : $INPUT_PIP"
 	for path in $INPUT_PIP; do
-	    pip install -t "$tempdir" -r "$path"
+	    pip install -t "$tempdir/python/" -r "$path"
 	done
-	pushd "$tempdir"
-	[ -n "$INPUT_EXCLUDES" ] && opts="-x $INPUT_EXCLUDES" || opts=
-	zip -r $archive . $opts
-	popd
-	rm -rf -- "$tempdir"
-	trap "rm -f -- '$archive'" EXIT
     fi
-    echo -n "$archive"
+    log "Zipping archive..."
+    set -f
+    if [ "$INPUT_TARGET" == "layer" ]; then
+	pushd "$tempdir"
+	zip -r $archive python $zip_opts
+	popd
+    else
+	pushd "$tempdir/python"
+	zip -r $archive . $zip_opts
+	popd
+    fi
+    set +f
+    rm -rf -- "$tempdir"
+    trap "rm -f -- '$archive'" EXIT
 }
 
 list_layer_version_arns()
