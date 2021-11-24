@@ -44,10 +44,11 @@ make_archive()
     log "Building $INPUT_NAME $INPUT_TARGET archive..."
     archive="$(realpath .)/archive.zip"
     trap "rm -f -- '$archive'" EXIT
+    set -f
     if [ -z "$INPUT_EXCLUDES" ]; then
 	zip_opts=
     else
-	zip_opts="-x $(sed -e s#\*#\\\\*#g <<< $INPUT_EXCLUDES)"
+	zip_opts="-x $INPUT_EXCLUDES"
     fi
     debug "INPUT_EXCLUDES: $INPUT_EXCLUDES"
     debug "zip_opts: $zip_opts"
@@ -74,6 +75,7 @@ make_archive()
 	rm -rf -- "$tempdir"
 	trap "rm -f -- '$archive'" EXIT
     fi
+    set +f
     echo -n "$archive"
 }
 
