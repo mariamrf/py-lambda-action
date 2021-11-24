@@ -55,7 +55,7 @@ make_archive()
     if [ -n "$INPUT_PATH" ]; then
 	for path in $INPUT_PATH; do
 	    pushd $path
-	    debug "Running: zip -r $archive . $zip_opts"
+	    debug Running: zip -r $archive . $zip_opts
 	    zip -r $archive . $zip_opts
 	    popd
 	done
