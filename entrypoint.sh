@@ -59,7 +59,7 @@ make_archive()
     if [ -n "$INPUT_PATH" ]; then
 	log "Installing codes... : $INPUT_PATH"
 	for path in $INPUT_PATH; do
-	    ln -s "$path/*" "$tempdir/python/"
+	    ln -s "$(realpath $path)/*" "$tempdir/python/"
 	done
     fi
     if [ -n "$INPUT_PIP" ]; then
