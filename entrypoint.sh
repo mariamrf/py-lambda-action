@@ -102,10 +102,11 @@ deploy_lambda_function()
     aws s3 cp "$archive" "$s3_url"
     if aws lambda get-function --function-name "${INPUT_NAME}" >/dev/null 2>&1
     then
+        log "Updating lambda function code: ${INPUT_NAME}"
         aws lambda update-function-code                 \
             --architectures "$INPUT_ARCHITECTURES"      \
-    	--function-name "$INPUT_NAME"                   \
-    	--zip-file "fileb://$archive"
+    	    --function-name "$INPUT_NAME"               \
+    	    --zip-file "fileb://$archive"
         opts=
         if [ -n "$INPUT_LAYERS" ]; then
     	layers=$(list_layer_version_arns "$INPUT_LAYERS")
@@ -122,6 +123,8 @@ deploy_lambda_function()
             sleep 1
         done
         aws lambda publish-function "$INPUT_NAME"
+    else
+        log "No lambda function found: $INPUT_NAME"
     fi
     rm -f -- "$archive"
     trap - EXIT
