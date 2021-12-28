@@ -127,7 +127,7 @@ deploy_lambda_function()
             fi
             sleep 1
         done
-        aws lambda publish-function "$INPUT_NAME"
+        aws lambda publish-version --function-name "$INPUT_NAME"
     else
         log "No lambda function found: $INPUT_NAME"
     fi
