@@ -95,13 +95,19 @@ list_layer_version_arns()
     echo -n $arns
 }
 
+lambda_function_exists()
+{
+    aws lambda list-functions | jq '.["Functions"][]["FunctionName"]' | \
+        grep -q "$INPUT_NAME"
+}
+
 deploy_lambda_function()
 {
     log "Deploying lambda function: $INPUT_NAME..."
     s3_url="s3://${INPUT_S3_BUCKET}/${INPUT_NAME}.zip"
     aws s3 cp "$archive" "$s3_url"
     log "Updating lambda function code: ${INPUT_NAME}"
-    if aws lambda get-function --function-name "${INPUT_NAME}"; then
+    if lambda_function_exists; then
         aws lambda update-function-code                 \
             --architectures "$INPUT_ARCHITECTURES"      \
     	    --function-name "$INPUT_NAME"               \
