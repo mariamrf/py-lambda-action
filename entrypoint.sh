@@ -117,6 +117,8 @@ deploy_lambda_function()
     	layers=$(list_layer_version_arns "$INPUT_LAYERS")
     	opts="--layers $layers"
         fi
+        aws lambda wait function-updated --function-name "$INPUT_NAME"
+        log "Lambda function updated: $INPUT_NAME"
         retry=4
         while ! aws lambda update-function-configuration    \
                 --function-name "${INPUT_NAME}"             \
@@ -127,7 +129,10 @@ deploy_lambda_function()
             fi
             sleep 1
         done
+        aws lambda wait function-updated --function-name "$INPUT_NAME"
+        log "Lambda function configured: $INPUT_NAME"
         aws lambda publish-version --function-name "$INPUT_NAME"
+        log "Lambda function published: $INPUT_NAME"
     else
         log "No lambda function found: $INPUT_NAME"
     fi
