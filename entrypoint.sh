@@ -100,9 +100,9 @@ deploy_lambda_function()
     log "Deploying lambda function: $INPUT_NAME..."
     s3_url="s3://${INPUT_S3_BUCKET}/${INPUT_NAME}.zip"
     aws s3 cp "$archive" "$s3_url"
+    log "Updating lambda function code: ${INPUT_NAME}"
     if aws lambda get-function --function-name "${INPUT_NAME}" >/dev/null 2>&1
     then
-        log "Updating lambda function code: ${INPUT_NAME}"
         aws lambda update-function-code                 \
             --architectures "$INPUT_ARCHITECTURES"      \
     	    --function-name "$INPUT_NAME"               \
