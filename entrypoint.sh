@@ -1,11 +1,15 @@
 #!/bin/bash
 set -e
 
-poll_command="aws lambda get-function --function-name \"${INPUT_LAMBDA_FUNCTION_NAME}\" --query 'Configuration.[State, LastUpdateStatus]'"
+poll_command="aws lambda get-function --function-name \"${INPUT_LAMBDA_FUNCTION_NAME}\" --query \"Configuration.[State, LastUpdateStatus]\""
 
 wait_state(){
 	echo "Waiting on function state update..."
 	until ${poll_command} | grep "Active"
+	do 
+		sleep 1
+	done
+	until ${poll_command} | grep "Successful"
 	do 
 		sleep 1
 	done
