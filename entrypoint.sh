@@ -1,6 +1,16 @@
 #!/bin/bash
 set -e
 
+readonly poll_command=aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.[State, LastUpdateStatus]'
+
+wait_state(){
+	echo "Waiting on function state update..."
+	until ${poll_command} | grep "Active"
+	do 
+		sleep 1
+	done
+}
+
 install_zip_dependencies(){
 	echo "Installing and zipping dependencies..."
 	mkdir python
@@ -31,6 +41,7 @@ deploy_lambda_function(){
 	install_zip_dependencies
 	publish_dependencies_as_layer
 	publish_function_code
+	wait_state
 	update_function_layers
 }
 
