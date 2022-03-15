@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-poll_command="aws lambda get-function --function-name \"${INPUT_LAMBDA_FUNCTION_NAME}\" --query Configuration.[State,LastUpdateStatus]"
+poll_command="aws lambda get-function --function-name ${INPUT_LAMBDA_FUNCTION_NAME} --query Configuration.[State,LastUpdateStatus]"
 
 wait_state(){
 	echo "Waiting on function state update..."
