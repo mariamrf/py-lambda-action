@@ -26,7 +26,8 @@ update_function_layers(){
 	echo "Using the layer in the function..."
 	local function_state=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.State')
 	echo "The Function Status is: $function_state"
-	while [[ "${function_state}" != "Active" ]]
+	echo $function_state != "Active"
+	while [[ $function_state != "Active" ]]
 	do
 		function_state=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.State')
 		echo "The Function Status is: ${function_state}"
