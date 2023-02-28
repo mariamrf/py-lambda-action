@@ -25,11 +25,11 @@ publish_function_code(){
 update_function_layers(){
 	echo "Using the layer in the function..."
 	local function_state=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.State')
-	echo $function_state
-	while [$function_state != "Active"]
+	echo "The Function Status is: $function_state"
+	while [[ "${function_state}" != "Active" ]]
 	do
 		function_state=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.State')
-		echo "${function_state}"
+		echo "The Function Status is: ${function_state}"
 		sleep 1
 	done
 	aws lambda update-function-configuration --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --layers "${INPUT_LAMBDA_LAYER_ARN}:${LAYER_VERSION}"
