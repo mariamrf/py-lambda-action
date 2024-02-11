@@ -1,4 +1,4 @@
-FROM python:"${INPUT_PYTHON_VERSION}"
+FROM python:3.11
 
 RUN apt-get update
 RUN apt-get install -y jq zip
