@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM dhermes/python-multi
 
 RUN apt-get update
 RUN apt-get install -y jq zip
