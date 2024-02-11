@@ -51,6 +51,7 @@ jobs:
       with:
         lambda_layer_arn: 'arn:aws:lambda:us-east-1:123456789012:layer:my-layer'
         lambda_function_name: 'my-function'
+        python_version: '3.11'
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
