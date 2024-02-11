@@ -30,7 +30,7 @@ update_function_layers(){
 	do
 		function_state=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.State')
 		echo "The Function Status is: ${function_state}"
-		sleep 1
+		sleep 5
 	done
 	aws lambda update-function-configuration --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --layers "${INPUT_LAMBDA_LAYER_ARN}:${LAYER_VERSION}"
 }
