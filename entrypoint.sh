@@ -17,7 +17,7 @@ publish_dependencies_as_layer(){
 }
 
 publish_function_code(){
-	echo "Deploying the code itself..."
+	echo "Deploying the code..."
 	zip -r code.zip . -x \*.git\*
 	aws lambda update-function-code --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --zip-file fileb://code.zip
 }
@@ -26,12 +26,12 @@ update_function_layers(){
 	echo "Using the layer in the function..."
 	local function_state=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.State')
 	echo "The Function Status is: $function_state"
-	while [[ $function_state != "\"Active\"" ]]
-	do
+	while [[ $function_state != "\"Active\"" ]]; do
 		function_state=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.State')
 		echo "The Function Status is: ${function_state}"
 		sleep 5
 	done
+ 	echo "The Function Status is: ${function_state}"
 	aws lambda update-function-configuration --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --layers "${INPUT_LAMBDA_LAYER_ARN}:${LAYER_VERSION}"
 }
 
@@ -43,4 +43,4 @@ deploy_lambda_function(){
 }
 
 deploy_lambda_function
-echo "Done."
+echo "DONE"
