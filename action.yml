@@ -3,7 +3,7 @@ author: Mariam Maarouf
 description: Deploy Python code to AWS Lambda with dependencies in a separate layer.
 inputs:
   requirements_txt:
-    description: the name/path to the requirements.txt file
+    description: The name/path to the requirements.txt file.
     required: true
     default: 'requirements.txt'
   lambda_layer_arn:
