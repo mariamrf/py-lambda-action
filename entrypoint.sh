@@ -28,7 +28,7 @@ update_function_layers(){
  	local function_status=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.LastUpdateStatus')
 	echo "The Function State is: $function_state"
  	echo "The Function Status is: $function_status"
-	while [[ $function_state != "\"Active\"" && $function_status != "\"Successful\""]]
+	while [[ $function_state != "\"Active\"" && $function_status != "\"Successful\"" ]]
  	do
 		function_state=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.State')
   		function_status=$(aws lambda get-function --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --query 'Configuration.LastUpdateStatus')
