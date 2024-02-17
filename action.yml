@@ -1,9 +1,9 @@
 name: Py Lambda Deploy
 author: Mariam Maarouf
-description: Deploy python code to AWS Lambda with dependencies in a separate layer.
+description: Deploy Python code to AWS Lambda with dependencies in a separate layer.
 inputs:
   requirements_txt:
-    description: the name/path to the requirements.txt file
+    description: The name/path to the requirements.txt file.
     required: true
     default: 'requirements.txt'
   lambda_layer_arn:
@@ -12,6 +12,10 @@ inputs:
   lambda_function_name:
     description: The Lambda function name. Check the AWS docs/readme for examples.
     required: true
+  python_version:
+    description: The version of Python to build with.
+    required: true
+    default: '3.12'
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -19,6 +23,7 @@ runs:
     - ${{ inputs.requirements_txt }}
     - ${{ inputs.lambda_layer_arn }}
     - ${{ inputs.lambda_function_name }}
+    - ${{ inputs.python_version }}
 branding:
   icon: 'layers'
   color: 'yellow'
