@@ -15,7 +15,7 @@ inputs:
   python_version:
     description: The version of Python to build with.
     required: true
-    default: '3.11'
+    default: '3.12'
 runs:
   using: 'docker'
   image: 'Dockerfile'
