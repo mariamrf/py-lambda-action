@@ -18,7 +18,7 @@ publish_dependencies_as_layer(){
 }
 
 publish_function_code(){
-	echo "Deploying the code..."
+	echo "Deploying the code itself..."
 	zip -r code.zip . -x \*.git\*
 	aws lambda update-function-code --function-name "${INPUT_LAMBDA_FUNCTION_NAME}" --zip-file fileb://code.zip
 }
@@ -48,4 +48,4 @@ deploy_lambda_function(){
 }
 
 deploy_lambda_function
-echo "DONE"
+echo "Done."
