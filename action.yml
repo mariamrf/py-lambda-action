@@ -12,6 +12,14 @@ inputs:
   lambda_function_name:
     description: The Lambda function name. Check the AWS docs/readme for examples.
     required: true
+  use_s3:
+    description: Whether to use S3 (true) or not (false) for the dependencies layer upload.
+    required: false
+    default: 'false'
+  s3_bucket_name:
+    description: The S3 bucket name for the dependencies layer upload.
+    required: false
+    default: no-bucket-name-here
 runs:
   using: 'docker'
   image: 'Dockerfile'
